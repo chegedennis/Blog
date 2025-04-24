@@ -1,24 +1,27 @@
 {% extends 'blog/base.html' %}
-
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
+<article class="mb-5">
+    <h2>{{ post.title }}</h2>
     <p class="text-muted">
         {{ post.created_at|date:"F d, Y" }} |
-        Category: <a href="{% url 'category_posts' slug=post.category.slug %}">{{ post.category.name }}</a>
+        <span class="badge bg-info text-dark">{{ post.category.name }}</span>
+        {% if post.author %} | by {{ post.author.username }}{% endif %}
     </p>
-    <div>{{ post.content|linebreaks }}</div>
+    <hr>
+    <div class="mt-4">{{ post.content|linebreaks }}</div>
+</article>
 
-    <a class="btn btn-outline-secondary mt-4" href="{% url 'post_list' %}">← Back to all posts</a>
+<a href="{% url 'post_list' %}" class="btn btn-outline-primary">← Back to all posts</a>
 {% endblock %}
-{% block extra_content %}
-    <div class="mt-4">
-        <h4>Categories</h4>
-        <ul>
-            {% for category in categories %}
-                <li><a href="{% url 'category_posts' slug=category.slug %}">{{ category.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+
+{% block sidebar %}
+{{ block.super }}
+<h5 class="mt-4">Latest Posts</h5>
+<ul class="list-unstyled">
+    {% for latest in latest_posts %}
+    <li><a href="{% url 'post_detail' slug=latest.slug %}">{{ latest.title }}</a></li>
+    {% endfor %}
+</ul>
 {% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}All Posts{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">All Blog Posts</h1>
+    {% for post in posts %}
+        <div class="mb-4">
+            <h3><a href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a></h3>
+            <p>
+                <span class="text-muted">{{ post.created_at|date:"F d, Y" }}</span> |
+                Category: <a href="{% url 'category_posts' slug=post.category.slug %}">{{ post.category.name }}</a>
+            </p>
+            <p>{{ post.content|truncatewords:30 }}</p>
+        </div>
+    {% empty %}
+        <p>No posts found.</p>
+    {% endfor %}
+{% endblock %}
+{% block extra_content %}
+    <div class="mt-4">
+        <h4>Categories</h4>
+        <ul>
+            {% for category in categories %}
+                <li><a href="{% url 'category_posts' slug=category.slug %}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
